@@ -1,0 +1,11 @@
+name: BlockChangePlugin
+version: 1.0
+main: net.kunmc.lab.blockchange.BlockChangePlugin
+api-version: 1.16
+author: stcYps
+website: https://github.com/stcYps
+commands:
+  blockchange:
+    description: BlockChangePlugin Main Command
+    usage: /blockchange <引数>
+    permission: op
