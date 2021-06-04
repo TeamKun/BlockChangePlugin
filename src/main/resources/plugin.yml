@@ -3,7 +3,7 @@ version: 1.0
 main: net.kunmc.lab.blockchange.BlockChangePlugin
 api-version: 1.16
 author: stcYps
-website: https://github.com/stcYps
+website: https://github.com/TeamKun/BlockChangePlugin
 commands:
   blockchange:
     description: BlockChangePlugin Main Command
