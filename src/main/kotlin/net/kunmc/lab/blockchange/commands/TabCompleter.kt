@@ -5,10 +5,16 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 
 class TabCompleter: TabCompleter {
-    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): MutableList<String> {
-        val result: MutableList<String> = mutableListOf()
+    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): MutableList<String>? {
+        var result: MutableList<String> = mutableListOf()
         if(args.size == 1) {
-            result.addAll(listOf("start", "stop"))
+            result.addAll(listOf("start", "stop", "range", "set", "remove"))
+            result = result.filter {
+                it.startsWith(args[0])
+            }.toMutableList()
+        }
+        else if (1 < args.size && args[0] != "range") {
+            return null
         }
         else {
             result.clear()
