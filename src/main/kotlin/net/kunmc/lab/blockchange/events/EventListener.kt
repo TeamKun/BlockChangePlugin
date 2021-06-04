@@ -32,7 +32,7 @@ class EventListener: Listener {
                 // 必要な値を代入
                 val p: Player = e.player
                 val id: UUID = p.uniqueId
-                val range: Int = config.getInt("range")
+                val range: Int = config.getInt("range", 5)
 
                 // 見ているブロックの情報を取得
                 val block: @Nullable Block? = p.getTargetBlock(range)
