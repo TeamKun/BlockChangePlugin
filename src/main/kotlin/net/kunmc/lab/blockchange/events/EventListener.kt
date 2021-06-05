@@ -27,8 +27,8 @@ class EventListener: Listener {
     fun onMove(e: PlayerMoveEvent) {
         // プラグインが有効な場合のみ
         if(Manager.isValid) {
-            // プレイヤー全員がプラグイン有効 or 設定されたプレイヤーのみ
-            if(Manager.atA || Manager.validPlayer.contains(e.player.uniqueId)) {
+            // 設定されたプレイヤーのみ
+            if(Manager.validPlayer.contains(e.player.uniqueId)) {
                 // 必要な値を代入
                 val p: Player = e.player
                 val id: UUID = p.uniqueId

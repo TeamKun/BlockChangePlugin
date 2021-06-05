@@ -5,10 +5,11 @@ import net.kunmc.lab.blockchange.config.Manager
 import org.bukkit.Bukkit
 
 import org.bukkit.ChatColor
-import org.bukkit.OfflinePlayer
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Entity
+import java.lang.Exception
 
 class CommandListener: CommandExecutor {
     // config.ymlを読み込む
@@ -97,34 +98,50 @@ class CommandListener: CommandExecutor {
                     return true
                 }
 
-                // 第二引数に @a が入力されたら全員有効にする
-                if(args[1] == "@a") {
-                    Manager.atA = true
-                    sender.sendMessage(
-                        "" + ChatColor.AQUA + "[BlockChangePlugin]\n"+
-                        "" + ChatColor.GREEN + "プレイヤー全員が有効になりました"
-                    )
-                    return true
-                }
-
                 // 第二引数以降の数を取得
                 val index: Int = args.size - 1
 
+                // 必要な変更を宣言
+                var entities: List<Entity>
+                var errCnt = 0
+                var successFlag = false
                 // 第二引数以降に入力されたプレイヤーのUUIDを取得
-                // 取得したUUIDをManagerクラスのvalidPlayerリストに格納する
+                // ManagerクラスのvalidPlayerリストに有効プレイヤーのUUIDを格納
                 for(i in 1..index) {
-                    val op: OfflinePlayer = Bukkit.getOfflinePlayer(args[i])
-                    if(op.hasPlayedBefore()) {
-                        Manager.validPlayer.add(op.uniqueId)
+                    try {
+                        entities = Bukkit.selectEntities(sender, args[i])
                     }
-                }
+                    // 存在しないプレイヤー名が入力されたら
+                    catch (e: Exception) {
+                        errCnt++
+                        continue
+                    }
+                    // サーバに接続していないプレイヤー名が入力されたら
+                    if(entities.isEmpty()) {
+                        errCnt++
+                        continue
+                    }
 
-                // 特定のプレイヤーのみを有効にするため atA に false を代入
-                Manager.atA = false
-                sender.sendMessage(
-                    "" + ChatColor.AQUA + "[BlockChangePlugin]\n"+
-                    "" + ChatColor.GREEN + "入力したプレイヤーが有効になりました"
-                )
+                    // １件でも登録に成功したらflagをtrueにする
+                    successFlag = true
+                    for(entity in entities) {
+                        Manager.validPlayer.add(entity.uniqueId)
+                    }
+                    Manager.validPlayer = Manager.validPlayer.distinct().toMutableList()
+                }
+                if(successFlag) {
+                    sender.sendMessage("" + ChatColor.AQUA + "[BlockChangePlugin]")
+                    if(errCnt != 0) {
+                        sender.sendMessage("" + ChatColor.GOLD + "不正なプレイヤー名が${errCnt}件入力されました")
+                    }
+                    sender.sendMessage("" + ChatColor.GREEN + "正常に入力されたプレイヤーが有効になりました")
+                }
+                else {
+                    sender.sendMessage(
+                        "" + ChatColor.AQUA + "[BlockChangePlugin]\n"+
+                        "" + ChatColor.RED + "error: 不正なプレイヤー名が入力されました"
+                    )
+                }
             }
             args[0] == "remove" -> {
                 if(args.size < 2) {
@@ -138,20 +155,48 @@ class CommandListener: CommandExecutor {
                 // 第二引数以降の数を取得
                 val index: Int = args.size - 1
 
+                // 必要な変更を宣言
+                var entities: List<Entity>
+                var errCnt = 0
+                var successFlag = false
                 // 第二引数以降に入力されたプレイヤーのUUIDを取得
                 // ManagerクラスのvalidPlayerリストから取得したUUIDを削除
                 for(i in 1..index) {
-                    val op: OfflinePlayer = Bukkit.getOfflinePlayer(args[i])
-                    if(op.hasPlayedBefore()) {
-                        val idx: Int = Manager.validPlayer.indexOf(op.uniqueId)
-                        Manager.validPlayer.removeAt(idx)
+                    try {
+                        entities = Bukkit.selectEntities(sender, args[i])
+                    }
+                    // 存在しないプレイヤー名が入力されたら
+                    catch (e: Exception) {
+                        errCnt++
+                        continue
+                    }
+                    // サーバに接続していないプレイヤー名が入力されたら
+                    if(entities.isEmpty()) {
+                        errCnt++
+                        continue
+                    }
+
+                    for(entity in entities) {
+                        val idx: Int = Manager.validPlayer.indexOf(entity.uniqueId)
+                        if(idx != -1) {
+                            successFlag = true
+                            Manager.validPlayer.removeAt(idx)
+                        }
                     }
                 }
-
-                sender.sendMessage(
-                    "" + ChatColor.AQUA + "[BlockChangePlugin]\n"+
-                    "" + ChatColor.GREEN + "入力したプレイヤーを無効化しました"
-                )
+                if(successFlag) {
+                    sender.sendMessage("" + ChatColor.AQUA + "[BlockChangePlugin]")
+                    if(errCnt != 0) {
+                        sender.sendMessage("" + ChatColor.GOLD + "不正なプレイヤー名が${errCnt}件入力されました")
+                    }
+                    sender.sendMessage("" + ChatColor.GREEN + "正常に入力されたプレイヤーが無効になりました")
+                }
+                else {
+                    sender.sendMessage(
+                        "" + ChatColor.AQUA + "[BlockChangePlugin]\n"+
+                        "" + ChatColor.RED + "error: 不正なプレイヤー名が入力されました"
+                    )
+                }
             }
             // 存在していない引数の場合エラーメッセージを送信して終了する
             else -> {

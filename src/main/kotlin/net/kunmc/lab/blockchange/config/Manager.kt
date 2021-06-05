@@ -7,10 +7,8 @@ class Manager {
     companion object {
         // プラグインが有効かどうか
         var isValid: Boolean = false
-        // プレイヤー全員がプラグイン有効かどうか
-        var atA: Boolean = true
         // プラグインが有効なプレイヤーのリスト
-        val validPlayer = mutableListOf<UUID>()
+        var validPlayer = mutableListOf<UUID>()
 
         // 除外するMaterialのリスト
         val exceMaterialList = listOf(
