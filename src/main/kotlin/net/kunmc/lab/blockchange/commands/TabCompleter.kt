@@ -13,7 +13,7 @@ class TabCompleter: TabCompleter {
                 it.startsWith(args[0])
             }.toMutableList()
         }
-        else if (1 < args.size && args[0] != "range") {
+        else if (1 < args.size && (args[0] == "set" || args[0] == "remove")) {
             return null
         }
         else {
