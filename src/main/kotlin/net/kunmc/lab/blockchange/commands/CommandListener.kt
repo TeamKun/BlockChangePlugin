@@ -101,7 +101,7 @@ class CommandListener: CommandExecutor {
                 // 第二引数以降の数を取得
                 val index: Int = args.size - 1
 
-                // 必要な変更を宣言
+                // 必要な変数を宣言
                 var entities: List<Entity>
                 var errCnt = 0
                 var successFlag = false
@@ -155,7 +155,7 @@ class CommandListener: CommandExecutor {
                 // 第二引数以降の数を取得
                 val index: Int = args.size - 1
 
-                // 必要な変更を宣言
+                // 必要な変数を宣言
                 var entities: List<Entity>
                 var errCnt = 0
                 var successFlag = false
@@ -194,7 +194,7 @@ class CommandListener: CommandExecutor {
                 else {
                     sender.sendMessage(
                         "" + ChatColor.AQUA + "[BlockChangePlugin]\n"+
-                        "" + ChatColor.RED + "error: 不正なプレイヤー名が入力されました"
+                        "" + ChatColor.RED + "error: プラグインが有効なプレイヤー名を入力してください"
                     )
                 }
             }
