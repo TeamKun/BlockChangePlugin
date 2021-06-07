@@ -16,6 +16,10 @@ class TabCompleter: TabCompleter {
                 it.startsWith(args[0])
             }.toMutableList()
         }
+        else if (args.size == 2 && args[0] == "range") {
+            result.clear()
+            result.addAll(listOf("setting", "<有効距離(整数)>"))
+        }
         else if (1 < args.size && (args[0] == "set" || args[0] == "remove")) {
             result.clear()
             if(args[0] == "set")

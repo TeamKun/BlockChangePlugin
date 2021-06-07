@@ -73,6 +73,15 @@ class CommandListener: CommandExecutor {
                     return true
                 }
 
+                // 現在の設定値の確認
+                if(args[1] == "setting") {
+                    sender.sendMessage(
+                        "" + ChatColor.AQUA + "[BlockChangePlugin]\n"+
+                        "" + ChatColor.GREEN + "現在の有効距離は${config.get("range")}です"
+                    )
+                    return true
+                }
+
                 try {
                     config.set("range", Integer.parseInt(args[1]))
                     BlockChangePlugin.plugin.reloadConfig()
